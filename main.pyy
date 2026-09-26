@@ -1,5 +1,7 @@
 import os
 import logging
+import threading
+from http.server import HTTPServer, BaseHTTPRequestHandler
 import yfinance as yt
 import yt_dlp
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -13,6 +15,18 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
 )
+
+# ----------------- خادم وهمي لإرضاء منصة Render -----------------
+class HealthCheckHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Bot is active and running!")
+
+def run_health_check_server():
+    port = int(os.environ.get("PORT", 8080))
+    server = HTTPServer(('0.0.0.0', port), HealthCheckHandler)
+    server.serve_forever()
 
 # ----------------- 1. قائمة الأوامر والترحيب -----------------
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -118,6 +132,9 @@ async def text_assistant(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # ----------------- التشغيل الرئيسي -----------------
 if __name__ == '__main__':
+    # تشغيل السيرفر الوهمي في الخلفية لإرضاء Render
+    threading.Thread(target=run_health_check_server, daemon=True).start()
+    
     app = ApplicationBuilder().token(TOKEN).build()
     
     app.add_handler(CommandHandler("start", start))
