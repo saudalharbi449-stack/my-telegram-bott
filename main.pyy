@@ -6,7 +6,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, CallbackQueryHandler, filters, ContextTypes
 
 # توكن البوت الخاص بك
-TOKEN = os.getenv("BOT_TOKEN", "8996385082:AAFU_Kma5wFzL9mUsGC8saYzMfnlR2qLMiA")
+TOKEN = os.getenv("BOT_TOKEN", "8996385082:AAHctaC2YFM_6_fQmoIPdPDvUySVHtXL_E4")
 
 # إعداد السجلات لمتابعة الأداء الأخطاء
 logging.basicConfig(
